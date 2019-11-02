@@ -1,3 +1,35 @@
+"""Small graph study using networkx.
+
+Ussage:
+============
+
+    python script.py
+
+
+Requirements:
+=============
+
+Packages:
+---------------
+
+networkx
+python-louvain
+matplotlib
+
+Data:
+----------------
+
+- data/nodes.csv
+- data/edges.csv
+
+
+Output:
+=============
+
+figures/*.png
+"""
+from pathlib import Path
+
 import networkx as nx
 import community
 
@@ -5,13 +37,16 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+figures_path = Path("figures")
+data_path = Path("data")
+
 
 # ===========
 # Load data
 # ===========
 G = nx.Graph()
-edges = nx.read_edgelist('edges.csv', delimiter=",")
-nodes = nx.read_adjlist("nodes.csv")
+edges = nx.read_edgelist(data_path / 'edges.csv', delimiter=",")
+nodes = nx.read_adjlist(data_path / "nodes.csv")
 G.add_edges_from(edges.edges())
 G.add_nodes_from(nodes)
 
@@ -38,7 +73,7 @@ for name, func in layouts.items():
     nx.draw_networkx_edges(G, pos)
     nx.draw_networkx_labels(G, pos, font_size=7)
     f.suptitle(f"Layout: {name}")
-    f.savefig(f"graph_{name}.png")
+    f.savefig(figures_path / f"graph_{name}.png")
     
 # Kamada kawai
 pos = nx.kamada_kawai_layout(G)
@@ -52,7 +87,7 @@ plt_nodes = nx.draw_networkx_nodes(
 )
 nx.draw_networkx_edges(G, pos)
 nx.draw_networkx_labels(G, pos, font_size=7)
-f.savefig("graph_kk.png")
+f.savefig(figures_path / "graph_kk.png")
 
 
 # ===========
@@ -77,7 +112,7 @@ nx.draw_networkx_edges(G, pos)
 nx.draw_networkx_labels(G, pos, font_size=7)
 plt.colorbar(plt_nodes)
 f.suptitle(f"Page Rank")
-f.savefig("graph_pr.png")
+f.savefig(figures_path / "graph_pr.png")
 
 
 # Louvain
@@ -97,7 +132,7 @@ plt_nodes = nx.draw_networkx_nodes(G, pos,
 nx.draw_networkx_edges(G, pos)
 nx.draw_networkx_labels(G, pos, font_size=7)
 f.suptitle(f"Louvain")
-f.savefig("graph_louvain.png")
+f.savefig(figures_path / "graph_louvain.png")
 
 
 # remove isolated nodes
@@ -118,4 +153,4 @@ plt_nodes = nx.draw_networkx_nodes(G, pos,
 nx.draw_networkx_edges(G, pos)
 nx.draw_networkx_labels(G, pos, font_size=7)
 f.suptitle(f"Louvain (no isolated nodes)")
-f.savefig("graph_louvain_no_isolated.png")
+f.savefig(figures_path / "graph_louvain_no_isolated.png")
